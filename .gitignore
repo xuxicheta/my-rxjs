@@ -1,0 +1,7 @@
+# Editor-specific
+
+# Installed libs
+node_modules/
+
+# Generated
+dist/

@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist/myrxjs",
+    "types": []
+  },
+  "files": [
+    "index.ts",
+  ],
+  "include": [
+    "src/**/*.d.ts"
+  ]
+}

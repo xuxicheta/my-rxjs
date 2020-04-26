@@ -1,0 +1,19 @@
+{
+  "name": "myrxjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "rxjs-tslint-rules": "^4.31.0",
+    "tslint": "^6.1.1",
+    "typescript": "^3.8.3"
+  }
+}
