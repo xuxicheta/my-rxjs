@@ -1,15 +1,18 @@
-import { SubscriptionLike } from './types';
+import { SubscriptionLike, TeardownLogic } from './types';
 
 export class Subscription implements SubscriptionLike {
   public closed = false;
-  private _subscriptions: SubscriptionLike[] | null = null;
+  private _subscriptions: SubscriptionLike[] = [];
 
-  constructor(private unsubscribeFn?: () => void) {
+  constructor(private teardown?: TeardownLogic) {
   }
 
   unsubscribe(): void {
-    if (this.unsubscribeFn) {
-      this.unsubscribeFn();
+    if (typeof this.teardown === 'function') {
+      this.teardown();
+    }
+    if (this.teardown instanceof Subscription) {
+      this.teardown.unsubscribe();
     }
 
     this._subscriptions.forEach(sub => sub.unsubscribe());
