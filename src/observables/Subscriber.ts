@@ -4,7 +4,7 @@ import { partialObserver } from '../internals/partial-observer';
 
 export class Subscriber<T> implements Observer<T> {
   protected destination: Observer<T>;
-  public subscription: Subscription;
+  public subscription: Subscription = new Subscription();
 
   constructor(
     destinationOrNext: PartialObserver<T> | ((value: T) => void) | null,
@@ -15,21 +15,30 @@ export class Subscriber<T> implements Observer<T> {
     this.destination.error = this.destination.error || ((err) => console.warn(err));
   }
 
-  next(v) {
+  next(v?: T) {
+    if (this.subscription.closed) {
+      return;
+    }
     this.destination.next(v);
   }
 
-  error(e) {
+  error(e?: any) {
+    if (this.subscription.closed) {
+      return;
+    }
     this.destination.error(e);
     this.unsubscribe();
   }
 
   complete() {
+    if (this.subscription.closed) {
+      return;
+    }
     this.destination.complete();
     this.unsubscribe();
   }
 
-  private unsubscribe() {
+  unsubscribe() {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
