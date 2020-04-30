@@ -4,6 +4,7 @@
     "rxjs-tslint-rules"
   ],
   "rules": {
+    "only-arrow-functions": false,
     "array-type": false,
     "arrow-parens": false,
     "deprecation": {
