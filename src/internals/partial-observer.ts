@@ -6,11 +6,17 @@ export function partialObserver<T>(
   error?: ((e: any) => void) | null,
   complete?: () => void
 ): Observer<T> {
+
+
   if (typeof nextOrObserver === 'object') {
-    return {
-      ...emptyObserver<T>(),
-      ...nextOrObserver
-    };
+    if (nextOrObserver.next && nextOrObserver.error && nextOrObserver.complete) {
+      return nextOrObserver as Observer<T>;
+    } else {
+      return {
+        ...emptyObserver<T>(),
+        ...nextOrObserver
+      };
+    }
   } else {
     const empty = emptyObserver<T>();
     return {
