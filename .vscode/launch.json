@@ -33,22 +33,24 @@
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "disableOptimisticBPs": true,
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Jest Current File",
+      "cwd": "${workspaceFolder}",
+      "args": [
+        "--inspect-brk",
+        "${workspaceRoot}/node_modules/.bin/jest",
+        "--testMatch=\"**/+(*.)+(spec|test).+(ts|js)?(x)\"",
+        "--testPathPattern=${fileBasenameNoExtension}",
+        "--runInBand",
+        "--config",
+        "${workspaceRoot}/jest.config.js"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true,
     }
-    // {
-    //   "type": "node",
-    //   "request": "launch",
-    //   "name": "Jest Current File",
-    //   "program": "${workspaceRoot}/node_modules/.bin/jest",
-    //   "cwd": "${workspaceFolder}",
-    //   "args": [
-    //     "test",
-    //     "--testMatch=\"**/+(*.)+(spec|test).+(ts|js)?(x)\"",
-    //     "--testPathPattern=${fileBasenameNoExtension}",
-    //     "--runInBand",
-    //   ],
-    //   "console": "integratedTerminal",
-    //   "internalConsoleOptions": "neverOpen",
-    //   "disableOptimisticBPs": true,
-    // }
   ]
 }
