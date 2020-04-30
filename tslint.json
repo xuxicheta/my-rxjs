@@ -61,18 +61,6 @@
       "single"
     ],
     "trailing-comma": true,
-    "rxjs-finnish": {
-      "options": [
-        {
-          "functions": false,
-          "methods": false,
-          "parameters": true,
-          "properties": true,
-          "variables": true
-        }
-      ],
-      "severity": "error"
-    },
     "cyclomatic-complexity": [
       true,
       8
