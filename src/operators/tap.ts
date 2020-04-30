@@ -1,6 +1,26 @@
-import { PartialObserver, MonoTypeOperatorFunction } from '../observables/types';
+import { PartialObserver, MonoTypeOperatorFunction, Observer } from '../observables/types';
 import { Observable } from '../observables/Observable';
 import { partialObserver } from '../internals/partial-observer';
+
+function createTapSubscriber<T, R>(
+  tapObserver: Observer<T>,
+  observer: PartialObserver<T>,
+): Observer<T> {
+  return {
+    next(v: T) {
+      tapObserver.next(v);
+      observer.next(v);
+    },
+    error(err) {
+      tapObserver.error(err);
+      observer.error(err);
+    },
+    complete() {
+      tapObserver.complete();
+      observer.complete();
+    }
+  }
+}
 
 export function tap<T>(
   nextOrObserver?: PartialObserver<T> | ((x: T) => void) | null,
@@ -11,21 +31,7 @@ export function tap<T>(
 
   return (input$: Observable<T>) => {
     return new Observable(observer => {
-      const sub = input$.subscribe({
-        next(v) {
-          tapObserver.next(v);
-          observer.next(v);
-        },
-        error(err) {
-          tapObserver.error(err);
-          observer.error(err);
-        },
-        complete() {
-          tapObserver.complete();
-          observer.complete();
-        }
-      });
-
+      const sub = input$.subscribe(createTapSubscriber(tapObserver, observer));
       return () => sub.unsubscribe();
     });
   }
