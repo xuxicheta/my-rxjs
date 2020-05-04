@@ -43,7 +43,7 @@ describe('BehaviorSubject', () => {
       // XXX: escape from readonly restriction for testing.
       (subject as any).value = 'jibbets';
     } catch (e) {
-      //noop
+      // noop
     }
 
     expect(subject.getValue()).toEqual('flibberty');
@@ -73,18 +73,28 @@ describe('BehaviorSubject', () => {
   it('should pump values to multiple subscribers', (done) => {
     const subject = new BehaviorSubject('init');
     const expected = ['init', 'foo', 'bar'];
-    let i = 0;
-    let j = 0;
+    const results1 = [];
+    const results2 = [];
 
     subject.subscribe((x: string) => {
-      expect(x).toEqual(expected[i++]);
+      results1.push(x);
     });
 
     subject.subscribe((x: string) => {
-      expect(x).toEqual(expected[j++]);
-    }, null, done);
+      results2.push(x);
+    });
 
-    expect((subject as any).observers.length).toEqual(2);
+    subject.subscribe(
+      null,
+      null,
+      () => {
+        expect(results1).toEqual(expected);
+        expect(results2).toEqual(expected);
+        done();
+      }
+    )
+
+    expect((subject as any).observers.length).toEqual(3);
     subject.next('foo');
     subject.next('bar');
     subject.complete();
@@ -192,7 +202,7 @@ describe('BehaviorSubject', () => {
     source.subscribe(subject);
   });
 
-  it.skip('should be an Observer which can be given to an interop source', (done) => {
+  it('should be an Observer which can be given to an interop source', (done) => {
     // This test reproduces a bug reported in this issue:
     // https://github.com/ReactiveX/rxjs/issues/5105
     // However, it cannot easily be fixed. See this comment:

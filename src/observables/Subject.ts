@@ -8,9 +8,9 @@ import { directObserver } from '../internals/direct-observer';
 
 export class Subject<T> extends Observable<T> implements SubscriptionLike, Observer<T> {
   closed = false;
-  protected hasError: boolean;
+  protected hasError = false;
   protected thrownError: any;
-  protected isStopped: boolean;
+  protected isStopped = false;
   protected observers: Observer<T>[] = [];
 
   unsubscribe() {
@@ -53,7 +53,11 @@ export class Subject<T> extends Observable<T> implements SubscriptionLike, Obser
     if (this.isStopped) {
       return;
     }
-    this.observers.forEach(observer => observer.complete());
+
+    this.observers
+      .slice()
+      .forEach(observer => observer.complete());
+
     this.stop();
   }
 
@@ -64,20 +68,37 @@ export class Subject<T> extends Observable<T> implements SubscriptionLike, Obser
   }
 
   protected safeSubscribe(subscriber: Subscriber<T>): Subscription {
+    let subscription = this.tryForCompletedSubscription();
+    if (subscription) {
+      this.sendCompleted(subscriber);
+      return subscription;
+    }
+
+    this.observers.push(subscriber);
+    subscription = new SubjectSubscription(this, subscriber);
+    subscriber.subscription = subscription;
+    return subscription;
+  }
+
+  protected tryForCompletedSubscription(): Subscription {
     if (this.closed) {
       throw new ObjectUnsubscribedError();
     }
     if (this.hasError) {
-      subscriber.error(this.thrownError);
       return Subscription.EMPTY;
     }
     if (this.isStopped) {
-      subscriber.complete();
       return Subscription.EMPTY;
     }
+  }
 
-    this.observers.push(subscriber);
-    return new SubjectSubscription(this, subscriber);
+  protected sendCompleted(subscriber: Subscriber<T>) {
+    if (this.hasError) {
+      subscriber.error(this.thrownError);
+    }
+    if (this.isStopped) {
+      subscriber.complete();
+    }
   }
 
 }

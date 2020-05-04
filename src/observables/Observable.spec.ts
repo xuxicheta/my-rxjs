@@ -6,7 +6,7 @@ import { empty } from '../creation/empty';
 import { map } from '../operators/map';
 
 /** @test {Observable} */
-describe.skip('Observable', () => {
+describe('Observable', () => {
   it('should be constructed with a subscriber function', (done) => {
     const source$ = new Observable<number>((observer) => {
       observer.next(1);

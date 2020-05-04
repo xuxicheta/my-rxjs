@@ -3,7 +3,7 @@ import { Observable } from './Observable';
 import { merge } from '../creation/merge';
 
 /** @test {Subscription} */
-describe.skip('Subscription', () => {
+describe('Subscription', () => {
   describe('Subscription.add()', () => {
     it('Should return self if the self is passed', () => {
       const sub = new Subscription();

@@ -21,24 +21,24 @@ describe('Subject', () => {
   });
 
   it('should pump values to multiple subscribers', (done) => {
-    const subject$ = new Subject<string>();
+    const subject = new Subject<string>();
     const expected = ['foo', 'bar'];
 
     let i = 0;
     let j = 0;
 
-    subject$.subscribe(function (x) {
+    subject.subscribe(function (x) {
       expect(x).toEqual(expected[i++]);
     });
 
-    subject$.subscribe(function (x) {
+    subject.subscribe(function (x) {
       expect(x).toEqual(expected[j++]);
     }, null, done);
 
-    expect((subject$ as any as { observers: Observer<any>[] }).observers.length).toEqual(2);
-    subject$.next('foo');
-    subject$.next('bar');
-    subject$.complete();
+    expect((subject as any as { observers: Observer<any>[] }).observers.length).toEqual(2);
+    subject.next('foo');
+    subject.next('bar');
+    subject.complete();
   });
 
   it('should handle subscribers that arrive and leave at different times, ' +

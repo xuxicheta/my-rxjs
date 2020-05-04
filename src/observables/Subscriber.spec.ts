@@ -2,7 +2,7 @@ import { Subscriber } from './Subscriber';
 
 
 /** @test {Subscriber} */
-describe.skip('Subscriber', () => {
+describe('Subscriber', () => {
   it('should ignore next messages after unsubscription', () => {
     let times = 0;
 
