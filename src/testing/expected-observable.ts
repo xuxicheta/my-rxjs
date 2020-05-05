@@ -90,8 +90,11 @@ class ExpectedObservable<T> {
     return this.checkIsMatched(await this.results);
   }
 
-  toBeTruthyWith(expectedString: string, expectedValues?: Record<string, string>, expectedError?: any) {
-    const values = expectedValues ? splitValues(expectedValues) : undefined;
-    return expect(this.toBe(expectedString, values, expectedError)).resolves.toBeTruthy();
+  toBeMatch(expectedString: string, expectedValues?: Record<string, string>, expectedError?: any) {
+    return expect(this.toBe(expectedString, expectedValues, expectedError)).resolves.toBeTruthy();
+  }
+
+  toBeMatchWithSplit(expectedString: string, expectedValues: Record<string, string>, expectedError?: any) {
+    return expect(this.toBe(expectedString, splitValues(expectedValues), expectedError)).resolves.toBeTruthy();
   }
 }

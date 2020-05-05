@@ -29,7 +29,7 @@ describe('static combineLatest', () => {
 
     const combined = combineLatest([firstSource, secondSource]);
 
-    return expectObservable(combined).toBeTruthyWith(expected, expectedValues);
+    return expectObservable(combined).toBeMatchWithSplit(expected, expectedValues);
   });
 
 
@@ -50,10 +50,7 @@ describe('static combineLatest', () => {
     const e2 = hot('----------|'); // empty
     const expected = '-----#';
 
-    return expectObservable(combineLatest([e1, e2])).toBe(expected)
-      .then(result => {
-        expect(result).toBeTruthy();
-      });
+    return expectObservable(combineLatest([e1, e2])).toBeMatch(expected);
   });
 
   it('should work with hot and throw', () => {
@@ -61,9 +58,6 @@ describe('static combineLatest', () => {
     const e2 = hot('----#', null, 'baz i nga');
     const expected = '----#';
 
-    return expectObservable(combineLatest([e1, e2])).toBe(expected)
-      .then(result => {
-        expect(result).toBeTruthy();
-      });
+    return expectObservable(combineLatest([e1, e2])).toBeMatch(expected)
   });
 });
