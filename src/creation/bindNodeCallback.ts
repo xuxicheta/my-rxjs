@@ -4,10 +4,9 @@ import { PartialObserver } from '../observables/types';
 import { AsyncSubject } from '../observables/AsyncSubject';
 
 
-export function bindCallback<T>(callbackFunc: Function): (...args: any[]) => Observable<T> {
-  return function bindCallbackFn(this: any, ...args: any[]) {
+export function bindNodeCallback<T>(callbackFunc: Function): (...args: any[]) => Observable<T> {
+  return function bindNodeCallbackFn(this: any, ...args: any[]) {
     let asyncSubject: AsyncSubject<T>;
-
     return new Observable((observer: PartialObserver<T>) => {
       if (asyncSubject) {
         return asyncSubject.subscribe(observer);
@@ -16,7 +15,12 @@ export function bindCallback<T>(callbackFunc: Function): (...args: any[]) => Obs
       asyncSubject = new AsyncSubject<T>();
 
       try {
-        callbackFunc.apply(this, [...args, (cbArg: T) => {
+        callbackFunc.apply(this, [...args, (err, cbArg: T) => {
+          if (err) {
+            asyncSubject.error(err);
+            return;
+          }
+
           asyncSubject.next(cbArg);
           asyncSubject.complete();
         }])
