@@ -13,7 +13,7 @@ class CompleterCounter {
   }
 }
 
-function createDirectSubscriber<T>(observer: PartialObserver<T>, source$: Observable<T>, completedCounter: CompleterCounter): Observer<T> {
+function createDirectSubscriber<T>(observer: PartialObserver<T>, completedCounter: CompleterCounter): Observer<T> {
   return {
     next: (v: T) => observer.next(v),
     error: err => observer.error(err),
@@ -32,7 +32,7 @@ export function merge<T>(...obs: Observable<T>[]): Observable<T> {
     const sub = new Subscription();
     obs.forEach(ob$ => {
       const iSub = ob$.subscribe(
-        createDirectSubscriber(observer, ob$, completedCounter)
+        createDirectSubscriber(observer, completedCounter)
       );
       sub.add(iSub);
     });
