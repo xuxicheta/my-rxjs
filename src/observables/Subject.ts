@@ -37,9 +37,7 @@ export class Subject<T> extends Observable<T> implements SubscriptionLike, Obser
     if (this.closed) {
       throw new ObjectUnsubscribedError();
     }
-    if (this.isStopped) {
-      return;
-    }
+
     this.hasError = true;
     this.thrownError = err;
     this.observers.forEach(observer => observer.error(err));

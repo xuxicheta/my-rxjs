@@ -3,7 +3,7 @@ import { SubscriptionLike, TeardownLogic } from './types';
 export class Subscription implements SubscriptionLike {
   public static EMPTY: Subscription = (() => {
     const empty = new Subscription();
-    (empty as any).closed = true;
+    empty.closed = true;
     return empty;
   })();
 
