@@ -82,7 +82,7 @@ class ExpectedObservable<T> {
           resolve(results);
         },
         complete: () => {
-          results[timer.timeSlot] = '|';
+          results[Math.max(0, timer.timeSlot)] = '|';
           timer.stop();
           resolve(results);
         }
