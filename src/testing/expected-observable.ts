@@ -76,7 +76,7 @@ class ExpectedObservable<T> {
           results[timer.timeSlot] = v;
         },
         error: (err) => {
-          results[timer.timeSlot] = '#';
+          results[Math.max(0, timer.timeSlot)] = '#';
           this.error = err;
           timer.stop();
           resolve(results);
