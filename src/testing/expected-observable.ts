@@ -82,6 +82,9 @@ class ExpectedObservable<T> {
           resolve(results);
         },
         complete: () => {
+          if (results[timer.timeSlot]) {
+            timer.timeSlot++;
+          }
           results[Math.max(0, timer.timeSlot)] = '|';
           timer.stop();
           resolve(results);
@@ -108,11 +111,11 @@ class ExpectedObservable<T> {
     return this.checkIsMatched(await this.results);
   }
 
-  toBeMatch(expectedString: string, expectedValues?: Record<string, string>, expectedError?: any) {
+  toBeMatch(expectedString: string, expectedValues?: Record<string, any>, expectedError?: any) {
     return expect(this.toBe(expectedString, expectedValues, expectedError)).resolves.toBeTruthy();
   }
 
-  toBeMatchWithSplit(expectedString: string, expectedValues: Record<string, string>, expectedError?: any) {
+  toBeMatchWithSplit(expectedString: string, expectedValues: Record<string, any>, expectedError?: any) {
     return expect(this.toBe(expectedString, splitValues(expectedValues), expectedError)).resolves.toBeTruthy();
   }
 }
