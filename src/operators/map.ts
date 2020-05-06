@@ -1,5 +1,6 @@
 import { Observable } from '../observables/Observable';
 import { OperatorFunction, PartialObserver, Observer } from '../observables/types';
+import { directObserver } from '../internals';
 
 function createMapSubscriber<T, R>(
   observer: PartialObserver<R>,
@@ -9,7 +10,8 @@ function createMapSubscriber<T, R>(
   let count = 0;
 
   return {
-    next(v: T) {
+    ...directObserver(observer),
+    next: (v: T) => {
       let result: R;
       try {
         result = project.call(thisArg, v, count++);
@@ -19,8 +21,6 @@ function createMapSubscriber<T, R>(
       }
       observer.next(result);
     },
-    error: err => observer.error(err),
-    complete: () => observer.complete(),
   }
 }
 

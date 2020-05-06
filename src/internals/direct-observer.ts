@@ -1,9 +1,9 @@
-import { Observer } from '../observables/types';
+import { PartialObserver } from '../observables/types';
 
-export function directObserver<T>(observer: Observer<T>) {
+export function directObserver<T>(observer: PartialObserver<T>) {
   return {
     next: (v: T) => observer.next(v),
-    error: err => observer.error(err),
+    error: (err: any) => observer.error(err),
     complete: () => observer.complete(),
   }
 }

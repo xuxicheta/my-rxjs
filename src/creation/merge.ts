@@ -1,6 +1,7 @@
 import { Observable } from '../observables/Observable';
 import { PartialObserver, Observer } from 'src/observables/types';
 import { Subscription } from '../observables/Subscription';
+import { directObserver } from '../internals/direct-observer';
 
 class CompleterCounter {
   constructor(
@@ -15,8 +16,7 @@ class CompleterCounter {
 
 function createDirectSubscriber<T>(observer: PartialObserver<T>, completedCounter: CompleterCounter): Observer<T> {
   return {
-    next: (v: T) => observer.next(v),
-    error: err => observer.error(err),
+    ...directObserver(observer),
     complete: () => {
       completedCounter.current++;
       if (completedCounter.isOff) {
