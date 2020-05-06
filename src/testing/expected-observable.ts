@@ -14,25 +14,43 @@ export function splitValues(expectedValues: Record<string, string>) {
   return result;
 }
 
+export class Timer {
+  public timeSlot = -1;
+  private interval: NodeJS.Timeout;
+
+  constructor(
+    private period = 40,
+    private cb = () => {},
+  ) {
+    this.interval = setInterval(
+      () => {
+        this.timeSlot += 1;
+        this.cb();
+      },
+      this.period,
+    );
+  }
+
+  stop() {
+    clearInterval(this.interval);
+  }
+}
+
 class ExpectedObservable<T> {
   results: Promise<(string | T)[]>;
   expectedString: string;
   expectedValues: object;
   expectedError?: any;
   error: any;
-  timeSlot = 0;
-  interval: NodeJS.Timeout;
   sub: Subscription;
 
-  constructor(private source: Observable<T>) {
+  constructor(
+    private source: Observable<T>,
+  ) {
     this.results = this.collectResults();
   }
 
-  private startTimer() {
-    this.interval = setInterval(() => {
-      this.timeSlot++
-    }, 30);
-  }
+
 
   private checkIsMatched(results: (string | T)[]) {
     const { expectedString, expectedError, error, expectedValues } = this;
@@ -50,22 +68,22 @@ class ExpectedObservable<T> {
 
   private collectResults(): Promise<(string | T)[]> {
     const results: (string | T)[] = [];
-    this.startTimer();
 
     return new Promise<(string | T)[]>((resolve, reject) => {
+      const timer = new Timer();
       this.sub = this.source.subscribe({
         next: (v) => {
-          results[this.timeSlot] = v;
+          results[timer.timeSlot] = v;
         },
         error: (err) => {
-          results[this.timeSlot] = '#';
+          results[timer.timeSlot] = '#';
           this.error = err;
-          clearInterval(this.interval);
+          timer.stop();
           resolve(results);
         },
         complete: () => {
-          results[this.timeSlot] = '|';
-          clearInterval(this.interval);
+          results[timer.timeSlot] = '|';
+          timer.stop();
           resolve(results);
         }
       });
